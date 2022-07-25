@@ -2,69 +2,69 @@ const { Product, Category } = require("../models")
 
 class ControllerProduct {
 
-    static async landing(req, res) {
-        try {
-            res.status(200).json({
-                message: "OK_landing",
-            })
-        } catch {
-            res.status(500).json({
-                message: "Error_landing_Server-Error"
-            })
-        }
-    }
-
     static async productList(req, res) {
         try {
             let readProduct = await Product.findAll()
             res.status(200).json({
-                message: "OK_productList_READ",
+                message: "SUCCESS_productList_READ",
                 products: readProduct
             })
         } catch (err) {
             res.status(500).json({
-                message: "Error_productList_Server-Error"
+                message: "ERR_productList_SERVER"
             })
             console.log(err)
         }
     }
 
-    static async productListPost(req, res) {
+    static async productPost(req, res) {
         console.log(req.body)
         try {
             const { name, description, price, stock, imgUrl, categoryId, authorId } = req.body
             await Product.create({ name, description, price, stock, imgUrl, categoryId, authorId })
-            let readProduct = await Product.findAll()
+            let readProduct = await Product.findAll({
+                where: req.body
+            })
             res.status(201).json({
-                message: "OK_productList_CREATE",
+                message: "SUCCESS_productList_CREATE",
                 products: readProduct
             })
-        } catch {
-            res.status(500).json({
-                message: "Error_productList"
-            })
+        } catch (err){
+            console.log(err)
+            if (err.name === 'SequelizeUniqueConstraintError') {
+                res.status(400).json({
+                    message: "ERR_productList_DUPLICATED"
+                })
+            } else if (err.name === 'SequelizeValidationError') {
+                res.status(400).json({
+                    message: `ERR_productList_[${err.errors[0].message}]`
+                })
+            } else {
+                res.status(500).json({
+                    message: "ERR_productList_SERVER"
+                })
+            }
         }
     }
 
     static async productDetails(req, res) {
-        console.log(req.params)
         try {
             let id = +req.params.id
             let readProduct = await Product.findByPk(id)
-            
+
             if (readProduct == null) {
                 res.status(404).json({
-                    message: "NULL_productDetails_READ",
+                    message: "ERR_productDetails_NULL-NOT_FOUND",
                 })
             } else {
                 res.status(200).json({
-                    message: "OK_productDetails_READ",
+                    message: "SUCCESS_productDetails_READ",
                     products: readProduct
                 })
             }
         } catch (err) {
             res.status(500).json({
-                message: "Error_productDetails_Server-Error"
+                message: "ERR_productDetails_SERVER"
             })
             console.log(err)
         }
@@ -72,18 +72,24 @@ class ControllerProduct {
 
     static async productDelete(req, res) {
         try {
-            let productId = req.params.id
+            let productId = +req.params.id
+            let readProduct = await Product.findByPk(productId)
             await Product.destroy({
-                where: {id: productId}
+                where: { id: productId }
             })
-            let readProduct = await Product.findAll()
-            res.status(200).json({
-                message: `OK_productDelete_[${productId}]_DELETE`,
-                products: readProduct
-            })
+            if(readProduct === null) {
+                res.status(404).json({
+                    message: "ERR_productDetails_NULL-NOT_FOUND"
+                })
+            } else {
+                res.status(200).json({
+                    message: `SUCCESS_productDelete_[${productId}]_DELETE`,
+                    products: readProduct
+                })
+            }
         } catch {
             res.status(500).json({
-                message: "Error_productDelete"
+                message: "ERR_productDelete_SERVER"
             })
         }
     }

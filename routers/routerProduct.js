@@ -2,11 +2,9 @@ const ControllerProduct = require('../controllers/controllerProduct')
 
 const routerProduct = require('express').Router()
 
-routerProduct.get("/", ControllerProduct.landing)
-
 routerProduct.get("/products", ControllerProduct.productList)
 
-routerProduct.post("/products", ControllerProduct.productListPost)
+routerProduct.post("/products", ControllerProduct.productPost)
 
 routerProduct.get("/products/:id", ControllerProduct.productDetails)
 

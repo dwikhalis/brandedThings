@@ -24,13 +24,14 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
       validate: {
         notEmpty: {
-          msg: "name can't be empty"
+          msg: "Name can't be empty"
         },
         notNull: {
-          msg: "name is required"
-        }
+          msg: "Name is required"
+        },
       }
     },
     description: {
@@ -38,10 +39,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notEmpty: {
-          msg: "description can't be empty"
+          msg: "Description can't be empty"
         },
         notNull: {
-          msg: "description is required"
+          msg: "Description is required"
         }
       }
     },
@@ -50,10 +51,14 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notEmpty: {
-          msg: "price can't be empty"
+          msg: "Price can't be empty"
         },
         notNull: {
-          msg: "price is required"
+          msg: "Price is required"
+        },
+        min: {
+          args: 10000,
+          msg: "Min Price is 10.000"
         }
       }
     },
@@ -62,10 +67,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notEmpty: {
-          msg: "stock can't be empty"
+          msg: "Stock can't be empty"
         },
         notNull: {
-          msg: "stock is required"
+          msg: "Stock is required"
         }
       }
     },
@@ -74,10 +79,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notEmpty: {
-          msg: "imgUrl can't be empty"
+          msg: "Image URL can't be empty"
         },
         notNull: {
-          msg: "imgUrl is required"
+          msg: "Image URL is required"
         }
       }
     },
