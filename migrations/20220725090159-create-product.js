@@ -28,10 +28,18 @@ module.exports = {
         references: {
           model: "Categories",
           key: "id"
-        }
+        },
+        onDelete: "cascade",
+        onUpdate: "cascade"
       },
       authorId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Users",
+          key: "id"
+        },
+        onDelete: "cascade",
+        onUpdate: "cascade"
       },
       createdAt: {
         allowNull: false,

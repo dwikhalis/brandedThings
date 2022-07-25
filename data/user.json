@@ -1,0 +1,26 @@
+[
+    {
+        "userName": "Dono",
+        "email": "dono@gmail.com",
+        "password": "dono123",
+        "role": "Admin",
+        "phoneNumber": "081234567890",
+        "address": "Jakarta Utara"
+    },
+    {
+        "userName": "Kasino",
+        "email": "kasino@gmail.com",
+        "password": "kasino123",
+        "role": "Staff",
+        "phoneNumber": "081234567891",
+        "address": "Jakarta Pusat"
+    },
+    {
+        "userName": "Indro",
+        "email": "indro@gmail.com",
+        "password": "indro123",
+        "role": "Staff",
+        "phoneNumber": "081234567892",
+        "address": "Jakarta Selatan"
+    }
+]
