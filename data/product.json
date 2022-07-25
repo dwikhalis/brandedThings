@@ -1,0 +1,29 @@
+[
+    {
+        "name": "Casual Dress - Zara",
+        "description": "Zara Dress",
+        "price": 100000,
+        "stock": 10,
+        "imgUrl": "https://id-test-11.slatic.net/p/1501910d6e14785b5af7c1f4246d0ea5.jpg",
+        "categoryId": 1,
+        "authorId": 1
+    },
+    {
+        "name": "Pink Jumper - H&M",
+        "description": "H&M Jumper",
+        "price": 150000,
+        "stock": 11,
+        "imgUrl": "https://id-test-11.slatic.net/p/8284466fb0e877ac9d1d6c9478b709d3.jpg",
+        "categoryId": 1,
+        "authorId": 1
+    },
+    {
+        "name": "Sofa Bed - IKEA",
+        "description": "IKEA Sofa Bed",
+        "price": 500000,
+        "stock": 5,
+        "imgUrl": "https://t3.ftcdn.net/jpg/03/79/00/96/360_F_379009657_eCkspURqCQ6ZtO3AuE61IBoMfPj0VhM0.jpg",
+        "categoryId": 2,
+        "authorId": 2
+    }
+]
