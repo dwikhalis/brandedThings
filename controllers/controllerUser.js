@@ -5,7 +5,7 @@ const { Product, Category, User } = require("../models")
 
 class ControllerUser {
 
-    static async userList(req, res) {
+    static async userList(req, res, next) {
         try {
             let readUsers = await User.findAll()
             res.status(200).json({
@@ -13,14 +13,11 @@ class ControllerUser {
                 users: readUsers
             })
         } catch (err) {
-            res.status(500).json({
-                message: "ERR_userList_SERVER"
-            })
-            console.log(err)
+            next(err)
         }
     }
 
-    static async userPost(req, res) {
+    static async userPost(req, res, next) {
         console.log(req.body)
         try {
             //! SEMUA REGISTER JADI ADMIN DULU
@@ -34,36 +31,21 @@ class ControllerUser {
                 where: req.body
             })
             res.status(201).json({
-                message: "SUCCESS_userPost_CREATE",
+                message: `User [ ${userName} ] succesfully created`,
                 user: { userName, role }
             })
         } catch (err){
-            console.log(err)
-            if (err.name === 'SequelizeUniqueConstraintError') {
-                res.status(400).json({
-                    message: `ERR_userPost_[${err.errors[0].message}]`
-                })
-            } else if (err.name === 'SequelizeValidationError') {
-                res.status(400).json({
-                    message: `ERR_userPost_[${err.errors[0].message}]`
-                })
-            } else {
-                res.status(500).json({
-                    message: "ERR_userPost_SERVER"
-                })
-            }
+            next(err)
         }
     }
 
-    static async userDetails(req, res) {
+    static async userDetails(req, res, next) {
         try {
             let id = +req.params.id
             let readUser = await User.findByPk(id)
 
             if (readUser == null) {
-                res.status(404).json({
-                    message: "ERR_userDetails_NULL-NOT_FOUND",
-                })
+                throw { name: "UserNotFound"}
             } else {
                 res.status(200).json({
                     message: "SUCCESS_userDetails_READ",
@@ -71,14 +53,11 @@ class ControllerUser {
                 })
             }
         } catch (err) {
-            res.status(500).json({
-                message: "ERR_userDetails_SERVER"
-            })
-            console.log(err)
+            next(err)
         }
     }
 
-    static async userDelete(req, res) {
+    static async userDelete(req, res, next) {
         try {
             let userId = +req.params.id
             let readUser = await User.findByPk(userId)
@@ -86,23 +65,19 @@ class ControllerUser {
                 where: { id: userId }
             })
             if(readUser === null) {
-                res.status(404).json({
-                    message: "ERR_userDelete_NULL-NOT_FOUND"
-                })
+                throw { name: "UserNotFound"}
             } else {
                 res.status(200).json({
-                    message: `SUCCESS_userDelete_[${userId}]_DELETE`,
+                    message: `User id [${userId}] succesfully deleted`,
                     users: readUser
                 })
             }
-        } catch {
-            res.status(500).json({
-                message: "ERR_userDelete_SERVER"
-            })
+        } catch (err) {
+            next(err)
         }
     }
 
-    static async userLogin(req, res) {
+    static async userLogin(req, res, next) {
         try {
             const { userNameOrEmail, password } = req.body
             const check = await User.findOne({
@@ -113,21 +88,14 @@ class ControllerUser {
 
             if (!check) {
                 if(req.body.userNameOrEmail.split("@").length === 2) {
-                    res.status(400).json({
-                        message: "ERR_userLogin_[Invalid Email or Password - Case Sensitive]"
-                    })
+                    throw {name: "InvalidCredentials"}
                 } else {
-                    res.status(400).json({
-                        message: "ERR_userLogin_[Invalid Username or Password - Case Sensitive]"
-                    })
+                    throw {name: "InvalidCredentials"}
                 }
             } else {
                 const comparePass = compareHashPass(password, check.password)
-    
                 if(!comparePass) {
-                    res.status(400).json({
-                        message: "ERR_userLogin_[Invalid Username or Password - Case Sensitive]"
-                    })
+                    throw {name: "InvalidCredentials"}
                 } else {
                     const payload = {
                         id: check.id
@@ -139,14 +107,10 @@ class ControllerUser {
                 }
             }
 
-        } catch (error) {
-            console.log(error)
-            res.status(500).json({
-                message: "ERR_userLogin_SERVER"
-            })
+        } catch (err) {
+            next(err)
         }
     }
-
 }
 
 module.exports = ControllerUser

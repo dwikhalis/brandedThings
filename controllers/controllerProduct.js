@@ -2,7 +2,7 @@ const { Product, Category } = require("../models")
 
 class ControllerProduct {
 
-    static async productList(req, res) {
+    static async productList(req, res, next) {
         try {
             let readProduct = await Product.findAll()
             res.status(200).json({
@@ -10,14 +10,11 @@ class ControllerProduct {
                 products: readProduct
             })
         } catch (err) {
-            res.status(500).json({
-                message: "ERR_productList_SERVER"
-            })
-            console.log(err)
+            next(err)
         }
     }
 
-    static async productPost(req, res) {
+    static async productPost(req, res, next) {
         console.log(req.body)
         try {
             const { name, description, price, stock, imgUrl, categoryId, authorId } = req.body
@@ -26,36 +23,21 @@ class ControllerProduct {
                 where: req.body
             })
             res.status(201).json({
-                message: "SUCCESS_productList_CREATE",
+                message: `New Product [ ${name} ] succesfully created`,
                 products: readProduct
             })
         } catch (err){
-            console.log(err)
-            if (err.name === 'SequelizeUniqueConstraintError') {
-                res.status(400).json({
-                    message: "ERR_productList_DUPLICATED"
-                })
-            } else if (err.name === 'SequelizeValidationError') {
-                res.status(400).json({
-                    message: `ERR_productList_[${err.errors[0].message}]`
-                })
-            } else {
-                res.status(500).json({
-                    message: "ERR_productList_SERVER"
-                })
-            }
+            next(err)
         }
     }
 
-    static async productDetails(req, res) {
+    static async productDetails(req, res, next) {
         try {
             let id = +req.params.id
             let readProduct = await Product.findByPk(id)
 
             if (readProduct == null) {
-                res.status(404).json({
-                    message: "ERR_productDetails_NULL-NOT_FOUND",
-                })
+                throw { name: "ProductNotFound"}
             } else {
                 res.status(200).json({
                     message: "SUCCESS_productDetails_READ",
@@ -63,14 +45,11 @@ class ControllerProduct {
                 })
             }
         } catch (err) {
-            res.status(500).json({
-                message: "ERR_productDetails_SERVER"
-            })
-            console.log(err)
+            next(err)
         }
     }
 
-    static async productDelete(req, res) {
+    static async productDelete(req, res, next) {
         try {
             let productId = +req.params.id
             let readProduct = await Product.findByPk(productId)
@@ -78,22 +57,17 @@ class ControllerProduct {
                 where: { id: productId }
             })
             if(readProduct === null) {
-                res.status(404).json({
-                    message: "ERR_productDetails_NULL-NOT_FOUND"
-                })
+                throw { name: "ProductNotFound"}
             } else {
                 res.status(200).json({
-                    message: `SUCCESS_productDelete_[${productId}]_DELETE`,
+                    message: `Product id [${productId}] succesfully deleted`,
                     products: readProduct
                 })
             }
-        } catch {
-            res.status(500).json({
-                message: "ERR_productDelete_SERVER"
-            })
+        } catch (err){
+            next(err)
         }
     }
-
 }
 
 module.exports = ControllerProduct
