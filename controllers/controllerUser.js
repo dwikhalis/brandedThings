@@ -1,3 +1,5 @@
+const { compareHashPass } = require("../helpers/hashing")
+const { createToken } = require("../helpers/token")
 const { Product, Category, User } = require("../models")
 
 class ControllerUser {
@@ -27,7 +29,7 @@ class ControllerUser {
             })
             res.status(201).json({
                 message: "SUCCESS_userPost_CREATE",
-                user: readUser
+                user: { userName, role }
             })
         } catch (err){
             console.log(err)
@@ -90,6 +92,48 @@ class ControllerUser {
         } catch {
             res.status(500).json({
                 message: "ERR_userDelete_SERVER"
+            })
+        }
+    }
+
+    static async userLogin(req, res) {
+        console.log(req.body)
+        try {
+            const { userName, password } = req.body
+            const check = await User.findOne({
+                where: {
+                    userName: userName
+                }
+            })
+
+//! CARA BIKIN check = userName ATAU email
+
+            if (!check) {
+                res.status(400).json({
+                    message: "ERR_userLogin_[Invalid Username or Password]"
+                })
+            } else {
+                const comparePass = compareHashPass(password, check.password)
+    
+                if(!comparePass) {
+                    res.status(400).json({
+                        message: "ERR_userLogin_[Invalid Username or Password]"
+                    })
+                } else {
+                    const payload = {
+                        id: check.id
+                    }
+
+                    const loginToken = createToken(payload)
+
+                    res.status(200).json({ token: loginToken})
+                }
+            }
+
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({
+                message: "ERR_userLogin_SERVER"
             })
         }
     }
