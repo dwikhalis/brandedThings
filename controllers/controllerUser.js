@@ -1,3 +1,4 @@
+const { Op } = require("sequelize")
 const { compareHashPass } = require("../helpers/hashing")
 const { createToken } = require("../helpers/token")
 const { Product, Category, User } = require("../models")
@@ -102,21 +103,24 @@ class ControllerUser {
     }
 
     static async userLogin(req, res) {
-        console.log(req.body)
         try {
-            const { userName, password } = req.body
+            const { userNameOrEmail, password } = req.body
             const check = await User.findOne({
                 where: {
-                    userName: userName
+                    [Op.or] : [{userName: userNameOrEmail}, {email: userNameOrEmail}]
                 }
             })
 
-//! CARA BIKIN check = userName ATAU email
-
             if (!check) {
-                res.status(400).json({
-                    message: "ERR_userLogin_[Invalid Username or Password]"
-                })
+                if(req.body.userNameOrEmail.split("@").length === 2) {
+                    res.status(400).json({
+                        message: "ERR_userLogin_[Invalid Email or Password]"
+                    })
+                } else {
+                    res.status(400).json({
+                        message: "ERR_userLogin_[Invalid Username or Password]"
+                    })
+                }
             } else {
                 const comparePass = compareHashPass(password, check.password)
     
