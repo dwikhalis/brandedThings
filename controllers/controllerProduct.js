@@ -15,18 +15,28 @@ class ControllerProduct {
     }
 
     static async productPost(req, res, next) {
-        console.log(req.body)
         try {
             const { name, description, price, stock, imgUrl, categoryId, authorId } = req.body
+            await Category.findAll({
+                where: {
+                    id: categoryId
+                }
+            })
+            .then(data => {
+                if (data.length === 0) {
+                    throw { name: "InvalidCategoryId"}
+                }
+            })
             await Product.create({ name, description, price, stock, imgUrl, categoryId, authorId })
             let readProduct = await Product.findAll({
                 where: req.body
             })
+            // gausah findAll lagi, pake returning
             res.status(201).json({
                 message: `New Product [ ${name} ] succesfully created`,
                 products: readProduct
             })
-        } catch (err){
+        } catch (err) {
             next(err)
         }
     }
@@ -34,10 +44,13 @@ class ControllerProduct {
     static async productDetails(req, res, next) {
         try {
             let id = +req.params.id
+            if (isNaN(id)) {
+                throw { name: "ParamsIdNotValid" }
+            }
             let readProduct = await Product.findByPk(id)
 
-            if (readProduct == null) {
-                throw { name: "ProductNotFound"}
+            if (!readProduct) {
+                throw { name: "ProductNotFound" }
             } else {
                 res.status(200).json({
                     message: "SUCCESS_productDetails_READ",
@@ -53,18 +66,19 @@ class ControllerProduct {
         try {
             let productId = +req.params.id
             let readProduct = await Product.findByPk(productId)
-            await Product.destroy({
-                where: { id: productId }
-            })
-            if(readProduct === null) {
-                throw { name: "ProductNotFound"}
+
+            if (!readProduct) {
+                throw { name: "ProductNotFound" }
             } else {
+                await Product.destroy({
+                    where: { id: productId }
+                })
                 res.status(200).json({
                     message: `Product id [${productId}] succesfully deleted`,
                     products: readProduct
                 })
             }
-        } catch (err){
+        } catch (err) {
             next(err)
         }
     }

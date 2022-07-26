@@ -10,7 +10,8 @@ routerUser.post("/users/login", ControllerUser.userLogin)
 
 routerUser.get("/users/:id", ControllerUser.userDetails)
 
-routerUser.delete("/users/:id", ControllerUser.userDelete)
+// routerUser.delete("/users/:id", ControllerUser.userDelete)
+//! gausah delete user
 
 
 module.exports = routerUser

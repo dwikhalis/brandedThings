@@ -18,18 +18,9 @@ class ControllerUser {
     }
 
     static async userPost(req, res, next) {
-        console.log(req.body)
         try {
-            //! SEMUA REGISTER JADI ADMIN DULU
-
-            req.body.role = "Admin"
-
-            //!===============================
             const { userName, email, password, role, phoneNumber, address } = req.body
-            await User.create({ userName, email, password, role, phoneNumber, address })
-            let readUser = await User.findAll({
-                where: req.body
-            })
+            await User.create({ userName, email, password, role: "Admin", phoneNumber, address })
             res.status(201).json({
                 message: `User [ ${userName} ] succesfully created`,
                 user: { userName, role }
@@ -78,8 +69,14 @@ class ControllerUser {
     }
 
     static async userLogin(req, res, next) {
-        try {
+        
+        try {           
             const { userNameOrEmail, password } = req.body
+            if (!userNameOrEmail) {
+                throw { name: "userNameOrEmailRequired"}
+            } else if (!password) {
+                throw { name: "passwordRequired"}
+            }
             const check = await User.findOne({
                 where: {
                     [Op.or] : [{userName: userNameOrEmail}, {email: userNameOrEmail}]
@@ -103,11 +100,12 @@ class ControllerUser {
 
                     const loginToken = createToken(payload)
 
-                    res.status(200).json({ token: loginToken})
+                    res.status(200).json({ token: loginToken })
                 }
             }
 
         } catch (err) {
+            console.log(err)
             next(err)
         }
     }

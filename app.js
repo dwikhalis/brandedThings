@@ -4,15 +4,13 @@ require("dotenv").config()
 
 const express = require('express')
 const errorHandler = require("./middlewares/errorHandler")
-const routerProduct = require('./routers/routerProduct')
-const routerUser = require('./routers/routerUser')
+const router = require("./routers")
 const app = express()
 const port = 3000
 
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
-app.use(routerProduct)
-app.use(routerUser)
+app.use(router)
 
 app.get("/",(req, res, next) => {
     try {
@@ -23,6 +21,8 @@ app.get("/",(req, res, next) => {
         next(err)
     }
 })
+
+// taro di tempat lain
 
 app.use(errorHandler)
 
