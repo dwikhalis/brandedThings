@@ -22,6 +22,11 @@ class ControllerUser {
     static async userPost(req, res) {
         console.log(req.body)
         try {
+            //! SEMUA REGISTER JADI ADMIN DULU
+
+            req.body.role = "Admin"
+
+            //!===============================
             const { userName, email, password, role, phoneNumber, address } = req.body
             await User.create({ userName, email, password, role, phoneNumber, address })
             let readUser = await User.findAll({
