@@ -1,5 +1,7 @@
 console.clear()
 
+require("dotenv").config()
+
 const express = require('express')
 const routerProduct = require('./routers/routerProduct')
 const routerUser = require('./routers/routerUser')

@@ -1,6 +1,7 @@
 'use strict';
 
-const fs = require('fs')
+const fs = require('fs');
+const { hashedPass } = require('../helpers/hashing');
 
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -17,7 +18,7 @@ module.exports = {
       return {
         userName: el.userName,
         email: el.email,
-        password: el.password,
+        password: hashedPass(el.password),
         role: el.role,
         phoneNumber: el.phoneNumber,
         address: el.address,

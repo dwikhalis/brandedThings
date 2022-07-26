@@ -114,11 +114,11 @@ class ControllerUser {
             if (!check) {
                 if(req.body.userNameOrEmail.split("@").length === 2) {
                     res.status(400).json({
-                        message: "ERR_userLogin_[Invalid Email or Password]"
+                        message: "ERR_userLogin_[Invalid Email or Password - Case Sensitive]"
                     })
                 } else {
                     res.status(400).json({
-                        message: "ERR_userLogin_[Invalid Username or Password]"
+                        message: "ERR_userLogin_[Invalid Username or Password - Case Sensitive]"
                     })
                 }
             } else {
@@ -126,7 +126,7 @@ class ControllerUser {
     
                 if(!comparePass) {
                     res.status(400).json({
-                        message: "ERR_userLogin_[Invalid Username or Password]"
+                        message: "ERR_userLogin_[Invalid Username or Password - Case Sensitive]"
                     })
                 } else {
                     const payload = {

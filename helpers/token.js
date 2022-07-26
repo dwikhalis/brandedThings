@@ -1,6 +1,6 @@
 const tokenJwt = require("jsonwebtoken")
 
-const key = "aselole"
+const key = process.env.SECRET_KEY
 
 const createToken = (payload) => tokenJwt.sign(payload, key)
 
