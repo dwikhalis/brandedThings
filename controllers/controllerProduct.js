@@ -4,7 +4,9 @@ class ControllerProduct {
 
     static async productList(req, res, next) {
         try {
-            let readProduct = await Product.findAll()
+            let readProduct = await Product.findAll({
+                include: Category
+            })
             res.status(200).json({
                 message: "SUCCESS_productList_READ",
                 products: readProduct
@@ -38,6 +40,7 @@ class ControllerProduct {
             })
 
             let readProduct = await Product.findAll({
+                include: Category,
                 where: {
                     name: req.body.name
                 }
@@ -59,7 +62,9 @@ class ControllerProduct {
             if (isNaN(id)) {
                 throw { name: "ParamsIdNotValid" }
             }
-            let readProduct = await Product.findByPk(id)
+            let readProduct = await Product.findByPk(id, {
+                include: Category
+            })
 
             if (!readProduct) {
                 throw { name: "ProductNotFound" }
@@ -75,8 +80,10 @@ class ControllerProduct {
     }
 
     static async productDelete(req, res, next) {
+        console.log(abc)
         try {
             let productId = +req.params.id
+
             let readProduct = await Product.findByPk(productId)
 
             if (!readProduct) {
@@ -91,6 +98,7 @@ class ControllerProduct {
                 })
             }
         } catch (err) {
+            console.log("error masuk")
             next(err)
         }
     }

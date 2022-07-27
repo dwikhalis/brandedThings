@@ -48,40 +48,42 @@ class ControllerUser {
         }
     }
 
-    static async userDelete(req, res, next) {
-        try {
-            let userId = +req.params.id
-            let readUser = await User.findByPk(userId)
-            await User.destroy({
-                where: { id: userId }
-            })
-            if(readUser === null) {
-                throw { name: "UserNotFound"}
-            } else {
-                res.status(200).json({
-                    message: `User id [${userId}] succesfully deleted`,
-                    users: readUser
-                })
-            }
-        } catch (err) {
-            next(err)
-        }
-    }
+    //! Gausah ada Delete User
+
+    // static async userDelete(req, res, next) {
+    //     try {
+    //         let userId = +req.params.id
+    //         let readUser = await User.findByPk(userId)
+    //         await User.destroy({
+    //             where: { id: userId }
+    //         })
+    //         if(readUser === null) {
+    //             throw { name: "UserNotFound"}
+    //         } else {
+    //             res.status(200).json({
+    //                 message: `User id [${userId}] succesfully deleted`,
+    //                 users: readUser
+    //             })
+    //         }
+    //     } catch (err) {
+    //         next(err)
+    //     }
+    // }
 
     static async userLogin(req, res, next) {
-        
-        try {           
-            const { userNameOrEmail, password } = req.body
-            if (!userNameOrEmail) {
-                throw { name: "userNameOrEmailRequired"}
-            } else if (!password) {
-                throw { name: "passwordRequired"}
-            }
-            const check = await User.findOne({
-                where: {
-                    [Op.or] : [{userName: userNameOrEmail}, {email: userNameOrEmail}]
+
+            try {           
+                const { userNameOrEmail, password } = req.body
+                if (!userNameOrEmail) {
+                    throw { name: "userNameOrEmailRequired"}
+                } else if (!password) {
+                    throw { name: "passwordRequired"}
                 }
-            })
+                const check = await User.findOne({
+                    where: {
+                        [Op.or] : [{userName: userNameOrEmail}, {email: userNameOrEmail}]
+                    }
+                })
 
             if (!check) {
                 if(req.body.userNameOrEmail.split("@").length === 2) {
