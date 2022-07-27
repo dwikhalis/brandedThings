@@ -5,7 +5,8 @@
         "password": "dono123",
         "role": "Admin",
         "phoneNumber": "081234567890",
-        "address": "Jakarta Utara"
+        "address": "Jakarta Utara",
+        "avatar": "https://i.postimg.cc/76wbVjQr/dono.jpg"
     },
     {
         "userName": "Kasino",
@@ -13,7 +14,8 @@
         "password": "kasino123",
         "role": "Staff",
         "phoneNumber": "081234567891",
-        "address": "Jakarta Pusat"
+        "address": "Jakarta Pusat",
+        "avatar": "https://i.postimg.cc/wTZvP1bV/kasino.jpg"
     },
     {
         "userName": "Indro",
@@ -21,6 +23,7 @@
         "password": "indro123",
         "role": "Staff",
         "phoneNumber": "081234567892",
-        "address": "Jakarta Selatan"
+        "address": "Jakarta Selatan",
+        "avatar": "https://i.postimg.cc/BZy4ZdcZ/indro.jpg"
     }
 ]

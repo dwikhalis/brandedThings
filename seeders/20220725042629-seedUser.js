@@ -22,6 +22,7 @@ module.exports = {
         role: el.role,
         phoneNumber: el.phoneNumber,
         address: el.address,
+        avatar: el.avatar,
         createdAt: new Date(),
         updatedAt: new Date()
       }

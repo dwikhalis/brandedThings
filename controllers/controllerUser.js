@@ -102,7 +102,12 @@ class ControllerUser {
 
                     const loginToken = createToken(payload)
 
-                    res.status(200).json({ token: loginToken })
+                    res.status(200).json({ 
+                        token: loginToken,
+                        userName: check.userName,
+                        role: check.role,
+                        avatar: check.avatar
+                    })
                 }
             }
 
