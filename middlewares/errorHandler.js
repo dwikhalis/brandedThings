@@ -1,9 +1,6 @@
-function errorHandler (err, req, res, next) {
-    if (err.name === 'SequelizeUniqueConstraintError') {
-        res.status(400).json({
-            message: [err.errors[0].message]
-        })
-    } else if (err.name === 'SequelizeValidationError') {
+function errorHandler(err, req, res, next) {
+    if (err.name === 'SequelizeUniqueConstraintError' ||
+        err.name === 'SequelizeValidationError') {
         const errors = {}
         err.errors.forEach(el => {
             let errName = el.path
@@ -32,7 +29,20 @@ function errorHandler (err, req, res, next) {
         res.status(401).json({
             message: "Invalid Username or Email or Password - Case Sensitive"
         })
-    } else if (err.name === "ProductNotFound") { 
+    } else if (err.name === 'NoToken') {
+        res.status(401).json({
+            message: "Please login"
+        })
+    } else if (err.name === 'InvalidToken' ||
+        err.name === 'JsonWebTokenError') {
+        res.status(401).json({
+            message: "Invalid Token"
+        })
+    } else if (err.name === 'ForbiddenAccess') {
+        res.status(403).json({
+            message: "Access Forbidden"
+        })
+    } else if (err.name === "ProductNotFound") {
         res.status(404).json({
             message: "Product Not Found"
         })

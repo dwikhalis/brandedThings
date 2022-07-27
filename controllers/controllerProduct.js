@@ -27,11 +27,23 @@ class ControllerProduct {
                     throw { name: "InvalidCategoryId"}
                 }
             })
-            await Product.create({ name, description, price, stock, imgUrl, categoryId, authorId })
+            await Product.create({
+                name, 
+                description, 
+                price, 
+                stock, 
+                imgUrl, 
+                categoryId, 
+                authorId: req.user.id
+            })
+
             let readProduct = await Product.findAll({
-                where: req.body
+                where: {
+                    name: req.body.name
+                }
             })
             // gausah findAll lagi, pake returning
+
             res.status(201).json({
                 message: `New Product [ ${name} ] succesfully created`,
                 products: readProduct
