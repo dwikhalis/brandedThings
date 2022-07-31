@@ -1,15 +1,21 @@
 ## Endpoints
 
 List of Available Endpoints:
+### Users Route
 - `GET /`
 - `GET /users`
-- `POST /users`
+- `POST /users/signup`
+- `POST /users/login`
 - `GET /users/:id`
-- `DELETE /users/:id`
+
+### Products Route
 - `GET /products`
+- `GET /products/categories`
 - `POST /products`
 - `GET /products/:id`
 - `DELETE /products/:id`
+
+###  <<< `===  Users Route  ===` >>>
 
 ### GET /
 #### Description
@@ -27,10 +33,11 @@ _500 - INTERNAL SERVER ERROR_
 - Body
     ```json
     {
-    "message": "ERR_userList_SERVER"
+    "message": "Internal Server Error"
     }
     ```
 ==  User Route  ==
+
 ### GET /users
 #### Description
 - Get all user list
@@ -63,11 +70,11 @@ _500 - INTERNAL SERVER ERROR_
 - Body
     ```json
     {
-    "message": "ERR_userList_SERVER"
+    "message": "Internal Server Error"
     }
     ```
 
-### POST /users
+### POST /users/signup
 #### Description
 - Create a new user data
 
@@ -94,7 +101,7 @@ _201 - CREATED_
 - Body
     ```json
     {
-       "message": "SUCCESS_userPost_CREATE",
+       "message": "User [ ${userName} ] succesfully created",
        "user": [
           {
             "id": 8,
@@ -114,7 +121,83 @@ _400 - BAD REQUEST_
 - Body
     ```json
     {
-    "message": "ERR_userPost_[String]"
+    "message": "SequelizeUniqueConstraintError"
+    }
+    ```
+    ```json
+    {
+    "message": "SequelizeValidationError"
+    }
+    ```
+    ```json
+    {
+    "message": "SequelizeDatabaseError"
+    }
+    ```
+_500 - INTERNAL SERVER ERROR_
+- Body
+    ```json
+    {
+    "message": "Internal Server Error"
+    }
+    ```
+
+### POST /users/login
+#### Description
+- Authenticate user data when login
+
+#### Request
+- Headers
+    ```json
+    {
+      "Content-Type": "application/x-www-form-urlencoded"
+    }
+- Body
+    ```json
+    {
+       "userNameOrEmail": String,
+       "password": String,
+    }
+    ```
+
+#### Response
+_200 - OK_
+- Body
+    ```json
+    {
+       "message": "SUCCESS_userLogin",
+       "user": [
+          {
+            "id": 8,
+            "userName": String,
+            "email": String,
+            "password": String,
+            "role": String,
+            "phoneNumber": String,
+            "address": String,
+            "createdAt": Date,
+            "updatedAt": Date
+          }
+       ]
+    }
+    ```
+_400 - BAD REQUEST_
+- Body
+    ```json
+    {
+    "message": "userNameOrEmailRequired"
+    }
+    ```
+    ```json
+    {
+    "message": "passwordRequired"
+    }
+    ```
+_401 - NOT AUTHORIZED_
+- Body
+    ```json
+    {
+    "message": "InvalidCredentials"
     }
     ```
 _500 - INTERNAL SERVER ERROR_
@@ -153,53 +236,22 @@ _200 - OK_
       ]
     }
     ```
-_500 - INTERNAL SERVER ERROR_
-- Body
-    ```json
-    {
-    "message": "ERR_userDetails_SERVER"
-    }
-    ```
-
-### DELETE /users/:id
-#### Description
-- Remove a user data based on given id (params)
-
-#### Response
-_200 - OK_
-- Body
-    ```json
-    {
-      "message": "SUCCESS_userDelete_[:id]_DELETE",
-      "users": {
-          "id": Integer,
-          "userName": String,
-          "email": String,
-          "password": String,
-          "role": String,
-          "phoneNumber": String,
-          "address": String,
-          "createdAt": Date,
-          "updatedAt": Date
-       }
-    }
-    ```
 _404 - NOT FOUND_
 - Body
     ```json
     {
-      "message": "ERR_userDelete_NULL-NOT_FOUND"
+    "message": "UserNotFound"
     }
     ```
 _500 - INTERNAL SERVER ERROR_
 - Body
     ```json
     {
-    "message": "ERR_userDelete_SERVER"
+    "message": "Internal Server Error"
     }
     ```
 
-==  Product Route  ==
+###  <<< `===  Products Route  ===` >>>
 
 ### GET /products
 #### Description
@@ -234,9 +286,42 @@ _500 - INTERNAL SERVER ERROR_
 - Body
     ```json
     {
-    "message": "ERR_productList_SERVER"
+    "message": "Internal Server Error"
     }
     ```
+
+
+
+### GET /products/categories
+#### Description
+- Get all category list
+
+#### Response
+_200 - OK_
+- Body
+    ```json
+    {
+    "message": "SUCCESS_categoryList_READ",
+    "products": [
+        {
+            "id": Integer,
+            "name": String
+        },
+        {
+        ...
+        }
+      ]
+    }
+    ```
+_500 - INTERNAL SERVER ERROR_
+- Body
+    ```json
+    {
+    "message": "Internal Server Error"
+    }
+    ```
+
+
 
 ### POST /products
 #### Description
@@ -266,7 +351,7 @@ _201 - CREATED_
 - Body
     ```json
     {
-       "message": "SUCCESS_productPost_CREATE",
+       "message": "New Product [ ${name} ] succesfully created",
        "product": [
           {
             "id": Integer,
@@ -287,14 +372,24 @@ _400 - BAD REQUEST_
 - Body
     ```json
     {
-    "message": "ERR_productPost_[String]"
+    "message": "SequelizeUniqueConstraintError"
+    }
+    ```
+    ```json
+    {
+    "message": "SequelizeValidationError"
+    }
+    ```
+    ```json
+    {
+    "message": "SequelizeDatabaseError"
     }
     ```
 _500 - INTERNAL SERVER ERROR_
 - Body
     ```json
     {
-    "message": "ERR_productPost_SERVER"
+    "message": "Internal Server Error"
     }
     ```
 
@@ -308,7 +403,7 @@ _200 - OK_
     ```json
     {
     "message": "SUCCESS_productDetails_READ",
-    "products": [
+    "users": [
         {
             "id": Integer,
             "name": String,
@@ -320,18 +415,29 @@ _200 - OK_
 		    "authorId": Integer,
             "createdAt": Date,
             "updatedAt": Date
-        },
-        {
-        ...
         }
       ]
+    }
+    ```
+_400 - BAD REQUEST_
+- Body
+    ```json
+    {
+    "message": "ParamsIdNotValid"
+    }
+    ```
+_404 - NOT FOUND_
+- Body
+    ```json
+    {
+    "message": "ProductNotFound"
     }
     ```
 _500 - INTERNAL SERVER ERROR_
 - Body
     ```json
     {
-    "message": "ERR_productDetails_SERVER"
+    "message": "Internal Server Error"
     }
     ```
 
@@ -344,7 +450,7 @@ _200 - OK_
 - Body
     ```json
     {
-      "message": "SUCCESS_productDelete_[:id]_DELETE",
+      "message": "Product id [${productId}] succesfully deleted",
       "products": {
             "id": Integer,
             "name": String,
@@ -363,26 +469,25 @@ _404 - NOT FOUND_
 - Body
     ```json
     {
-      "message": "ERR_productDelete_NULL-NOT_FOUND"
+      "message": "ProductNotFound"
     }
     ```
 _500 - INTERNAL SERVER ERROR_
 - Body
     ```json
     {
-    "message": "ERR_productDelete_SERVER"
+    "message": "Internal Server Error"
     }
     ```
-== Global ==
+
+###  <<< `===  Global  ===` >>>
+
 ### Global Error
 #### Response
 _500 - Internal Server Error_
 - Body
     ```json
     {
-      "statusCode": 500,
-      "error": {
-        "message": "Internal Server Error"
-      }
+    "message": "Internal Server Error"
     }
     ```

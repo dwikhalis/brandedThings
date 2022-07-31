@@ -102,7 +102,6 @@ class ControllerProduct {
                 })
             }
         } catch (err) {
-            console.log("error masuk")
             next(err)
         }
     }

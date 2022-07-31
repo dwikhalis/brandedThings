@@ -66,7 +66,6 @@ function errorHandler(err, req, res, next) {
             message: "User Not Found"
         })
     } else {
-        // console.log(err.name, "<<<<<<<<<<<<<<<<<<<<<")
         res.status(500).json({
             message: "Internal Server Error"
         })

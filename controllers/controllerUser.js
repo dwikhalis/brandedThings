@@ -32,24 +32,6 @@ class ControllerUser {
         }
     }
 
-    static async userDetails(req, res, next) {
-        try {
-            let id = +req.params.id
-            let readUser = await User.findByPk(id)
-
-            if (readUser == null) {
-                throw { name: "UserNotFound" }
-            } else {
-                res.status(200).json({
-                    message: "SUCCESS_userDetails_READ",
-                    users: readUser
-                })
-            }
-        } catch (err) {
-            next(err)
-        }
-    }
-
     static async userLogin(req, res, next) {
 
         try {
@@ -87,13 +69,32 @@ class ControllerUser {
                         userName: check.userName,
                         role: check.role,
                         avatar: check.avatar,
-                        id: check.id
+                        id: check.id,
+                        message: "SUCCESS_userLogin",
                     })
                 }
             }
 
         } catch (err) {
             console.log(err)
+            next(err)
+        }
+    }
+
+    static async userDetails(req, res, next) {
+        try {
+            let id = +req.params.id
+            let readUser = await User.findByPk(id)
+
+            if (readUser == null) {
+                throw { name: "UserNotFound" }
+            } else {
+                res.status(200).json({
+                    message: "SUCCESS_userDetails_READ",
+                    users: readUser
+                })
+            }
+        } catch (err) {
             next(err)
         }
     }
