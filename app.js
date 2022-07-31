@@ -13,19 +13,6 @@ app.use(cors())                                     //! middleware cors wajib ta
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(router)
-
-app.get("/",(req, res, next) => {
-    try {
-        res.status(200).json({
-            message: "SUCCESS_landing"
-        })
-    } catch (err){
-        next(err)
-    }
-})
-
-// taro di tempat lain
-
 app.use(errorHandler)
 
 app.listen(port, () => {

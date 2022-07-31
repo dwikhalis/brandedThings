@@ -91,10 +91,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notEmpty: {
-          msg: "categoryId can't be empty"
+          msg: "Category can't be empty"
         },
         notNull: {
-          msg: "categoryId is required"
+          msg: "Category is required"
         }
       }
     },

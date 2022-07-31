@@ -12,7 +12,7 @@
         "userName": "Kasino",
         "email": "kasino@gmail.com",
         "password": "kasino123",
-        "role": "Staff",
+        "role": "Admin",
         "phoneNumber": "081234567891",
         "address": "Jakarta Pusat",
         "avatar": "https://i.postimg.cc/wTZvP1bV/kasino.jpg"
@@ -21,7 +21,7 @@
         "userName": "Indro",
         "email": "indro@gmail.com",
         "password": "indro123",
-        "role": "Staff",
+        "role": "Admin",
         "phoneNumber": "081234567892",
         "address": "Jakarta Selatan",
         "avatar": "https://i.postimg.cc/BZy4ZdcZ/indro.jpg"

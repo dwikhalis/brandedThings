@@ -1,4 +1,5 @@
-const { Product } = require("../models")
+const { Product, User } = require("../models")
+const authentication = require("./authentication")
 
 async function authorization(req, res, next) {
     try {
@@ -12,11 +13,22 @@ async function authorization(req, res, next) {
             throw { name: "ProductNotFound" }
         }
 
-        if (product.authorId === req.user.id) {
-            next()
-        } else {
-            throw { name: "ForbiddenAccess"}
-        }
+        await User.findByPk(req.user.id)
+        .then(data => {
+            if(data.role === "Admin") {
+                next()
+            } else {
+                if (product.authorId === req.user.id) {
+                    next()
+                } else {
+                    throw { name: "ForbiddenAccess"}
+                }
+            }
+        })
+        .catch(err => {
+            next(err)
+        })
+
         
     } catch (err) {
         next(err)

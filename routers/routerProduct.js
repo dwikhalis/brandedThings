@@ -4,12 +4,14 @@ const { Product } = require("../models")
 
 const routerProduct = require('express').Router()
 
-routerProduct.get("/products", ControllerProduct.productList)
+routerProduct.get("/", ControllerProduct.productList)
 
-routerProduct.post("/products", ControllerProduct.productPost)
+routerProduct.post("/", ControllerProduct.productPost)
 
-routerProduct.get("/products/:id", ControllerProduct.productDetails)
+routerProduct.get("/categories", ControllerProduct.categoryList)
 
-routerProduct.delete("/products/:id", authorization, ControllerProduct.productDelete)
+routerProduct.get("/:id", ControllerProduct.productDetails)
+
+routerProduct.delete("/:id", authorization, ControllerProduct.productDelete)
 
 module.exports = routerProduct

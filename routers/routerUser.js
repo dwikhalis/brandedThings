@@ -2,16 +2,13 @@ const routerUser = require('express').Router()
 const ControllerUser = require('../controllers/controllerUser')
 
 
-routerUser.get("/users", ControllerUser.userList)
+routerUser.get("/", ControllerUser.userList)
 
-routerUser.post("/users", ControllerUser.userPost)
+routerUser.post("/signup", ControllerUser.userSignUp)
 
-routerUser.post("/users/login", ControllerUser.userLogin)
+routerUser.post("/login", ControllerUser.userLogin)
 
-routerUser.get("/users/:id", ControllerUser.userDetails)
-
-//! gausah delete user
-// routerUser.delete("/users/:id", ControllerUser.userDelete)
+routerUser.get("/:id", ControllerUser.userDetails)
 
 
 module.exports = routerUser

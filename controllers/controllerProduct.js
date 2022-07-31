@@ -5,7 +5,8 @@ class ControllerProduct {
     static async productList(req, res, next) {
         try {
             let readProduct = await Product.findAll({
-                include: Category
+                include: Category,
+                order: [["id", "DESC"]]
             })
             res.status(200).json({
                 message: "SUCCESS_productList_READ",
@@ -16,19 +17,24 @@ class ControllerProduct {
         }
     }
 
+    static async categoryList(req, res, next) {
+        try {
+            let readCategory = await Category.findAll({
+                order: [["id", "DESC"]]
+            })
+            res.status(200).json({
+                message: "SUCCESS_categoryList_READ",
+                categories: readCategory
+            })
+        } catch (err) {
+            next(err)
+        }
+    }
+
     static async productPost(req, res, next) {
         try {
             const { name, description, price, stock, imgUrl, categoryId, authorId } = req.body
-            await Category.findAll({
-                where: {
-                    id: categoryId
-                }
-            })
-            .then(data => {
-                if (data.length === 0) {
-                    throw { name: "InvalidCategoryId"}
-                }
-            })
+
             await Product.create({
                 name, 
                 description, 
@@ -45,7 +51,6 @@ class ControllerProduct {
                     name: req.body.name
                 }
             })
-            // gausah findAll lagi, pake returning
 
             res.status(201).json({
                 message: `New Product [ ${name} ] succesfully created`,
@@ -80,7 +85,6 @@ class ControllerProduct {
     }
 
     static async productDelete(req, res, next) {
-        console.log(abc)
         try {
             let productId = +req.params.id
 

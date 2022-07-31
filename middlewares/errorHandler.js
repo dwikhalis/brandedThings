@@ -1,6 +1,5 @@
 function errorHandler(err, req, res, next) {
-    if (err.name === 'SequelizeUniqueConstraintError' ||
-        err.name === 'SequelizeValidationError') {
+    if (err.name === 'SequelizeUniqueConstraintError') {
         const errors = {}
         err.errors.forEach(el => {
             let errName = el.path
@@ -8,6 +7,22 @@ function errorHandler(err, req, res, next) {
         });
         res.status(400).json({
             message: errors
+        })
+    } else if (err.name === 'SequelizeValidationError') {
+    const errors = {}
+    err.errors.forEach(el => {
+        let errName = el.path
+        errors[errName] = el.message
+    });
+    res.status(400).json({
+        message: errors
+    })
+    } else if (err.name === 'SequelizeDatabaseError') {
+        console.log(err)
+        res.status(400).json({
+            message: {
+                databaseError: err.parent.message
+            }
         })
     } else if (err.name === 'InvalidCategoryId') {
         res.status(400).json({
@@ -51,6 +66,7 @@ function errorHandler(err, req, res, next) {
             message: "User Not Found"
         })
     } else {
+        // console.log(err.name, "<<<<<<<<<<<<<<<<<<<<<")
         res.status(500).json({
             message: "Internal Server Error"
         })
