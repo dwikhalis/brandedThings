@@ -1,5 +1,8 @@
 console.clear()
-require("dotenv").config()
+
+if (process.env.NODE_ENV != "production") {
+    require("dotenv").config()
+}
 
 const cors = require("cors")                        //! Untuk nerima passingan data cross platform
 
@@ -7,7 +10,7 @@ const express = require('express')
 const errorHandler = require("./middlewares/errorHandler")
 const router = require("./routers")
 const app = express()
-const port = 3000
+const port = process.env.PORT || 3000
 
 app.use(cors())                                     //! middleware cors wajib taro paling atas diantara middleware
 app.use(express.urlencoded({ extended: false }))

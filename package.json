@@ -4,6 +4,7 @@
   "description": "CMS Integration - Server",
   "main": "index.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,6 +24,7 @@
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "google-auth-library": "^8.1.1",
+    "heroku": "^7.60.2",
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.7.3",
     "sequelize": "^6.21.3"
