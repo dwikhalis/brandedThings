@@ -10,10 +10,12 @@ List of Available Endpoints:
 
 ### Products Route
 - `GET /products`
-- `GET /products/categories`
 - `POST /products`
+- `GET /products/categories`
 - `GET /products/:id`
-- `DELETE /products/:id`
+- `PUT /products/:id`
+- `PATCH /products/:id`
+- DEPRECETED - `DELETE /products/:id` 
 
 ###  <<< `===  Users Route  ===` >>>
 
@@ -273,39 +275,9 @@ _200 - OK_
             "imgUrl": String,
             "categoryId": Integer,
 		    "authorId": Integer,
+            "status": String,
             "createdAt": Date,
             "updatedAt": Date
-        },
-        {
-        ...
-        }
-      ]
-    }
-    ```
-_500 - INTERNAL SERVER ERROR_
-- Body
-    ```json
-    {
-    "message": "Internal Server Error"
-    }
-    ```
-
-
-
-### GET /products/categories
-#### Description
-- Get all category list
-
-#### Response
-_200 - OK_
-- Body
-    ```json
-    {
-    "message": "SUCCESS_categoryList_READ",
-    "products": [
-        {
-            "id": Integer,
-            "name": String
         },
         {
         ...
@@ -342,7 +314,8 @@ _500 - INTERNAL SERVER ERROR_
        "stock": Integer,
        "imgUrl": String,
        "categoryId": Integer,
-       "authorId": Integer
+       "authorId": Integer,
+       "status": String,
     }
     ```
 
@@ -351,7 +324,7 @@ _201 - CREATED_
 - Body
     ```json
     {
-       "message": "New Product [ ${name} ] succesfully created",
+       "message": "Product [${product_name}] with id [${product_id}] succesfully updated by [${product_updatedBy}]",
        "product": [
           {
             "id": Integer,
@@ -362,6 +335,7 @@ _201 - CREATED_
             "imgUrl": String,
             "categoryId": Integer,
 		    "authorId": Integer,
+            "status": String,
             "createdAt": Date,
             "updatedAt": Date
           }
@@ -393,6 +367,39 @@ _500 - INTERNAL SERVER ERROR_
     }
     ```
 
+### GET /products/categories
+#### Description
+- Get all category list
+
+#### Response
+_200 - OK_
+- Body
+    ```json
+    {
+    "message": "SUCCESS_categoryList_READ",
+    "products": [
+        {
+            "id": Integer,
+            "name": String
+        },
+        {
+        ...
+        }
+      ]
+    }
+    ```
+_500 - INTERNAL SERVER ERROR_
+- Body
+    ```json
+    {
+    "message": "Internal Server Error"
+    }
+    ```
+
+
+
+
+
 ### GET /products/:id
 #### Description
 - Get product details based on given id (params)
@@ -413,6 +420,7 @@ _200 - OK_
             "imgUrl": String,
             "categoryId": Integer,
 		    "authorId": Integer,
+            "status": String,
             "createdAt": Date,
             "updatedAt": Date
         }
@@ -441,7 +449,144 @@ _500 - INTERNAL SERVER ERROR_
     }
     ```
 
-### DELETE /products/:id
+### PUT /products/:id
+#### Description
+- Update product data based on given id (params)
+
+#### Request
+- Headers
+    ```json
+    {
+      "Content-Type": "application/x-www-form-urlencoded"
+    }
+- Body
+    ```json
+    {
+       "name": String,
+       "description": String,
+       "price": Integer,
+       "stock": Integer,
+       "imgUrl": String,
+       "categoryId": Integer,
+       "authorId": Integer,
+       "status": String,
+    }
+    ```
+
+#### Response
+_200 - OK_
+- Body
+    ```json
+    {
+       "message": "Product [${product_name}] with id [${product_id}] succesfully updated by [${product_updatedBy}]",
+       "product": [
+          {
+            "id": Integer,
+            "name": String,
+            "description": String,
+            "price": Integer,
+            "stock": Integer,
+            "imgUrl": String,
+            "categoryId": Integer,
+		    "authorId": Integer,
+            "status": String,
+            "createdAt": Date,
+            "updatedAt": Date
+          }
+       ]
+    }
+    ```
+_400 - BAD REQUEST_
+- Body
+    ```json
+    {
+    "message": "ProductNotFound"
+    }
+    ```
+    ```json
+    {
+    "message": "SequelizeUniqueConstraintError"
+    }
+    ```
+    ```json
+    {
+    "message": "SequelizeValidationError"
+    }
+    ```
+    ```json
+    {
+    "message": "SequelizeDatabaseError"
+    }
+    ```
+_500 - INTERNAL SERVER ERROR_
+- Body
+    ```json
+    {
+    "message": "Internal Server Error"
+    }
+    ```
+
+### PATCH /products/:id
+#### Description
+- Change product status on given id (params)
+
+#### Request
+- Headers
+    ```json
+    {
+      "Content-Type": "application/x-www-form-urlencoded"
+    }
+- Body
+    ```json
+    {
+       "status": String,
+    }
+    ```
+
+#### Response
+_200 - OK_
+- Body
+    ```json
+    {
+       "message": "Product [${product_name}] with id [${product_id}] status has been updated from [${readProduct.status}] into [${product_status}]",
+       "product": [
+          {
+            "id": Integer,
+            "name": String,
+            "description": String,
+            "price": Integer,
+            "stock": Integer,
+            "imgUrl": String,
+            "categoryId": Integer,
+		    "authorId": Integer,
+            "status": String,
+            "createdAt": Date,
+            "updatedAt": Date
+          }
+       ]
+    }
+    ```
+_400 - BAD REQUEST_
+- Body
+    ```json
+    {
+    "message": "ProductNotFound"
+    }
+    ```
+    ```json
+    {
+    "message": "SameStatus"
+    }
+    ```
+_500 - INTERNAL SERVER ERROR_
+- Body
+    ```json
+    {
+    "message": "Internal Server Error"
+    }
+    ```
+
+### DEPRECETED [ DELETE /products/:id ]
 #### Description
 - Remove a product data based on given id (params)
 
@@ -460,6 +605,7 @@ _200 - OK_
             "imgUrl": String,
             "categoryId": Integer,
 		    "authorId": Integer,
+            "status": String,
             "createdAt": Date,
             "updatedAt": Date
        }

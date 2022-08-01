@@ -122,52 +122,7 @@ class ControllerProduct {
     //     }
     // }
 
-    static async statusPatch(req, res, next) {
-        try {
-            let productId = +req.params.id
-            let statusUpdate = req.body.status
-
-            let readProduct = await Product.findByPk(productId)
-
-            if (!readProduct) {
-                throw { name: "ProductNotFound" }
-            } else {
-                await Product.update({ status: statusUpdate }, {
-                    where: { id: productId }
-                })
-
-                const { authorId } = readProduct
-                const readUser = await User.findAll({
-                    where: {
-                        id: authorId
-                    }
-                })
-
-                const updatedProductStatus = await Product.findByPk(productId)
-
-                let product_id = updatedProductStatus.id
-                let product_name = updatedProductStatus.name
-                let product_status = updatedProductStatus.status
-                let product_updatedBy = readUser[0].userName
-                let product_historyDescription = `Product [${product_name}] with id [${product_id}] status has been updated from [${product_status}] into [${statusUpdate}]`
-
-                if (readProduct.status === product_status) {
-                    throw { name: "SameStatus" }
-                }
-
-                ControllerProduct.productHistory(product_id, product_name, product_historyDescription, product_updatedBy)
-
-                res.status(200).json({
-                    message: `Product [${product_name}] with id [${product_id}] status has been updated from [${readProduct.status}] into [${product_status}]`,
-                    products: updatedProductStatus
-                })
-            }
-        } catch (err) {
-            next(err)
-        }
-    }
-
-    static async productUpdate(req, res, next) {
+    static async productUpdatePut(req, res, next) {
         try {
 
             let productId = +req.params.id
@@ -198,7 +153,7 @@ class ControllerProduct {
     
                 ControllerProduct.productHistory(product_id, product_name, product_historyDescription, product_updatedBy)
     
-                res.status(201).json({
+                res.status(200).json({
                     message: `Product [${product_name}] with id [${product_id}] succesfully updated by [${product_updatedBy}]`,
                     products: readProductUpdated
                 })
@@ -206,6 +161,51 @@ class ControllerProduct {
 
         } catch (err) {
             console.log(err)
+            next(err)
+        }
+    }
+
+    static async statusPatch(req, res, next) {
+        try {
+            let productId = +req.params.id
+            let statusUpdate = req.body.status
+
+            let readProduct = await Product.findByPk(productId)
+
+            if (!readProduct) {
+                throw { name: "ProductNotFound" }
+            } else {
+                await Product.update({ status: statusUpdate }, {
+                    where: { id: productId }
+                })
+
+                const { authorId } = readProduct
+                const readUser = await User.findAll({
+                    where: {
+                        id: authorId
+                    }
+                })
+
+                const updatedProductStatus = await Product.findByPk(productId)
+
+                let product_id = updatedProductStatus.id
+                let product_name = updatedProductStatus.name
+                let product_status = updatedProductStatus.status
+                let product_updatedBy = readUser[0].userName
+                let product_historyDescription = `Product [${product_name}] with id [${product_id}] status has been updated from [${readProduct.status}] into [${product_status}]`
+
+                if (readProduct.status === product_status) {
+                    throw { name: "SameStatus" }
+                }
+
+                ControllerProduct.productHistory(product_id, product_name, product_historyDescription, product_updatedBy)
+
+                res.status(200).json({
+                    message: `Product [${product_name}] with id [${product_id}] status has been updated from [${readProduct.status}] into [${product_status}]`,
+                    products: updatedProductStatus
+                })
+            }
+        } catch (err) {
             next(err)
         }
     }

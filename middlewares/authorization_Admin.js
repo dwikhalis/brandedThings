@@ -1,6 +1,6 @@
 const { Product, User } = require("../models")
 
-async function authorization(req, res, next) {
+async function authorization_Admin(req, res, next) {
     try {
         if (isNaN(+req.params.id)) {
             throw { name: "ParamsIdNotValid" }
@@ -30,4 +30,4 @@ async function authorization(req, res, next) {
     }
 }
 
-module.exports = authorization
+module.exports = authorization_Admin
