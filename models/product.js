@@ -109,6 +109,18 @@ module.exports = (sequelize, DataTypes) => {
           msg: "authorId is required"
         }
       }
+    },
+    status: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "status can't be empty"
+        },
+        notNull: {
+          msg: "status is required"
+        }
+      }
     }
   }, 
   {

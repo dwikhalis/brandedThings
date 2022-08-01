@@ -40,6 +40,10 @@ function errorHandler(err, req, res, next) {
         res.status(400).json({
             message: "Password is Required"
         })
+    } else if (err.name === 'SameStatus') {
+        res.status(400).json({
+            message: "Same product status already been set"
+        })
     } else if (err.name === 'InvalidCredentials') {
         res.status(401).json({
             message: "Invalid Username or Email or Password - Case Sensitive"

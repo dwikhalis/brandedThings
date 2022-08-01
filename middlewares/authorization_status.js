@@ -13,22 +13,18 @@ async function authorization(req, res, next) {
         }
 
         await User.findByPk(req.user.id)
-        .then(data => {
-            if(data.role === "Admin") {
-                next()
-            } else {
-                if (product.authorId === req.user.id) {
+            .then(data => {
+                if (data.role === "Admin") {
                     next()
                 } else {
-                    throw { name: "ForbiddenAccess"}
+                    throw { name: "ForbiddenAccess" }
                 }
-            }
-        })
-        .catch(err => {
-            next(err)
-        })
+            })
+            .catch(err => {
+                next(err)
+            })
 
-        
+
     } catch (err) {
         next(err)
     }

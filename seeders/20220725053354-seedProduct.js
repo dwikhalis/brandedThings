@@ -22,6 +22,7 @@ module.exports = {
         imgUrl: el.imgUrl,
         categoryId: el.categoryId,
         authorId: el.authorId,
+        status: "active",
         createdAt: new Date(),
         updatedAt: new Date()
       }
