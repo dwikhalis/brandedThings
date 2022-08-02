@@ -293,8 +293,6 @@ _500 - INTERNAL SERVER ERROR_
     }
     ```
 
-
-
 ### POST /products
 #### Description
 - Create a new product data
@@ -616,6 +614,42 @@ _404 - NOT FOUND_
     ```json
     {
       "message": "ProductNotFound"
+    }
+    ```
+_500 - INTERNAL SERVER ERROR_
+- Body
+    ```json
+    {
+    "message": "Internal Server Error"
+    }
+    ```
+
+###  <<< `===  Histories Route  ===` >>>
+
+### GET /histories
+#### Description
+- Get all history list
+
+#### Response
+_200 - OK_
+- Body
+    ```json
+    {
+    "message": "SUCCESS_history_READ",
+    "users": [
+        {
+            "id": Integer,
+            "entityId": Iteger,
+            "name": String,
+            "description": String,
+            "updatedBy": String,
+            "createdAt": Date,
+            "updatedAt": Date
+        },
+        {
+        ...
+        }
+      ]
     }
     ```
 _500 - INTERNAL SERVER ERROR_

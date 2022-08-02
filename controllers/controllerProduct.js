@@ -215,7 +215,7 @@ class ControllerProduct {
             entityId: product_id,
             name: product_name,
             description: product_historyDescription,
-            updatedBy: product_updatedBy
+            updatedBy: product_updatedBy,
         })
             .then(data => {
                 console.log(data)

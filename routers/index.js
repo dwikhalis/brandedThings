@@ -1,6 +1,7 @@
 const router = require("express").Router()
 const routerProduct = require('./routerProduct')
 const routerUser = require('./routerUser')
+const routerHistory = require('./routerHistory')
 const authentication = require("../middlewares/authentication")
 
 router.get("/",(req, res, next) => {
@@ -14,6 +15,8 @@ router.get("/",(req, res, next) => {
 })
 
 router.use("/users", routerUser)
+
+router.use("/histories", routerHistory)
 
 router.use(authentication)
 
