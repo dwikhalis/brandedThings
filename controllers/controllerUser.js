@@ -48,11 +48,7 @@ class ControllerUser {
             })
 
             if (!check) {
-                if (req.body.userNameOrEmail.split("@").length === 2) {
-                    throw { name: "InvalidCredentials" }
-                } else {
-                    throw { name: "InvalidCredentials" }
-                }
+                throw { name: "InvalidCredentials" }
             } else {
                 const comparePass = compareHashPass(password, check.password)
                 if (!comparePass) {
@@ -72,6 +68,10 @@ class ControllerUser {
                         id: check.id,
                         message: "SUCCESS_userLogin",
                     })
+
+                    req.headers = {
+                        token: loginToken
+                    }
                 }
             }
 
@@ -106,49 +106,47 @@ class ControllerUser {
             const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
             const ticket = await client.verifyIdToken({
                 idToken: token_google,
-                audience: process.env.GOOGLE_CLIENT_ID,     // Specify the CLIENT_ID of the app that accesses the backend
-                // Or, if multiple clients access the backend: [CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+                audience: process.env.GOOGLE_CLIENT_ID
             });
 
-            const payload = ticket.getPayload();
-            // const userid = payload['sub'];
-            // If request specified a G Suite domain:
-            // const domain = payload['hd'];
+            const getPayload = ticket.getPayload();
 
             const check = await User.findOne({
                 where: {
-                    userName: payload.given_name
+                    userName: getPayload.given_name
                 }
             })
 
             if (!check) {
-                await User.create({
-                    userName: payload.given_name,
-                    email: payload.email,
+                
+                const newPayload = ticket.getPayload();
+
+                let userCreate = await User.create({
+                    userName: newPayload.given_name,
+                    email: newPayload.email,
                     password: "staff",
                     role: "Staff",
                     phoneNumber: "0",
                     address: "staff",
-                    avatar: payload.picture
+                    avatar: newPayload.picture
                 })
-                .done(data => {
+
                     const payload = {
-                        id: data.id
+                        id: userCreate.id
                     }
-    
+
+                    console.log(newPayload)
+
                     const loginToken = createToken(payload)
-    
+
                     res.status(200).json({
                         token: loginToken,
-                        userName: data.userName,
-                        role: data.role,
-                        avatar: data.avatar,
-                        id: data.id
+                        userName: userCreate.userName,
+                        role: userCreate.role,
+                        avatar: userCreate.avatar,
+                        id: userCreate.id
                     })
-                })
-                .fail((err) => {
-                    console.log(err)
-                })
+
             } else {
 
                 const payload = {
@@ -167,7 +165,7 @@ class ControllerUser {
             }
 
         } catch (err) {
-            console.log(err)
+            next(err)
         }
     }
 }

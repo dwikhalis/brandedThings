@@ -15,7 +15,10 @@ List of Available Endpoints:
 - `GET /products/:id`
 - `PUT /products/:id`
 - `PATCH /products/:id`
-- DEPRECETED - `DELETE /products/:id` 
+- DEPRECETED - `DELETE /products/:id`
+
+### Histories Route
+- `GET /histories`
 
 ###  <<< `===  Users Route  ===` >>>
 

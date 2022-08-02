@@ -1,29 +1,16 @@
-const { Product, User } = require("../models")
+const { User } = require("../models")
 
 async function authorization_Admin(req, res, next) {
     try {
-        if (isNaN(+req.params.id)) {
-            throw { name: "ParamsIdNotValid" }
+        let authorize = await User.findByPk(req.user.id)
+
+        console.log(authorize)
+
+        if (authorize.role === "Admin") {
+            next()
+        } else {
+            throw { name: "ForbiddenAccess" }
         }
-
-        let product = await Product.findByPk(req.params.id)
-
-        if (!product) {
-            throw { name: "ProductNotFound" }
-        }
-
-        await User.findByPk(req.user.id)
-            .then(data => {
-                if (data.role === "Admin") {
-                    next()
-                } else {
-                    throw { name: "ForbiddenAccess" }
-                }
-            })
-            .catch(err => {
-                next(err)
-            })
-
 
     } catch (err) {
         next(err)

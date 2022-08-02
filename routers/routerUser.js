@@ -8,6 +8,8 @@ routerUser.post("/signup", ControllerUser.userSignUp)
 
 routerUser.post("/login", ControllerUser.userLogin)
 
+routerUser.post("/login/google", ControllerUser.userLoginGoogle)
+
 routerUser.get("/:id", ControllerUser.userDetails)
 
 

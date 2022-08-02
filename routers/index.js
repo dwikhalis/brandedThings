@@ -18,9 +18,7 @@ router.use("/users", routerUser)
 
 router.use("/histories", routerHistory)
 
-router.use(authentication)
-
-router.use("/products", routerProduct)
+router.use("/products", authentication, routerProduct)
 
 
 

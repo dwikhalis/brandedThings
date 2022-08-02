@@ -1,4 +1,5 @@
-const { Product, Category, User, History } = require("../models")
+const productHistory = require("../helpers/historyMaker")
+const { Product, Category, User} = require("../models")
 
 class ControllerProduct {
 
@@ -33,7 +34,13 @@ class ControllerProduct {
 
     static async productPost(req, res, next) {
         try {
-            const { name, description, price, stock, imgUrl, categoryId, authorId } = req.body
+            const { name, description, price, stock, imgUrl, categoryId} = req.body
+
+            let checkCategoryId = await Category.findByPk(categoryId)
+
+            if (!checkCategoryId) {
+                throw { name: "InvalidCategoryId"}
+            }
 
             await Product.create({
                 name,
@@ -64,7 +71,7 @@ class ControllerProduct {
             let product_updatedBy = readUser[0].userName
             let product_historyDescription = `New Product [ ${product_name} ] with id [${product_id}] succesfully created by [${product_updatedBy}]`
 
-            ControllerProduct.productHistory(product_id, product_name, product_historyDescription, product_updatedBy)
+            productHistory(product_id, product_name, product_historyDescription, product_updatedBy)
 
             res.status(201).json({
                 message: `New Product [ ${product_name} ] with id [${product_id}] succesfully created by [${product_updatedBy}]`,
@@ -124,7 +131,6 @@ class ControllerProduct {
 
     static async productUpdatePut(req, res, next) {
         try {
-
             let productId = +req.params.id
 
             let readProduct = await Product.findAll({
@@ -151,7 +157,7 @@ class ControllerProduct {
                 let product_updatedBy = readUser[0].userName
                 let product_historyDescription = `Product [${product_name}] with id [${product_id}] succesfully updated by [${product_updatedBy}]`
     
-                ControllerProduct.productHistory(product_id, product_name, product_historyDescription, product_updatedBy)
+                productHistory(product_id, product_name, product_historyDescription, product_updatedBy)
     
                 res.status(200).json({
                     message: `Product [${product_name}] with id [${product_id}] succesfully updated by [${product_updatedBy}]`,
@@ -160,7 +166,6 @@ class ControllerProduct {
             }
 
         } catch (err) {
-            console.log(err)
             next(err)
         }
     }
@@ -198,7 +203,7 @@ class ControllerProduct {
                     throw { name: "SameStatus" }
                 }
 
-                ControllerProduct.productHistory(product_id, product_name, product_historyDescription, product_updatedBy)
+                productHistory(product_id, product_name, product_historyDescription, product_updatedBy)
 
                 res.status(200).json({
                     message: `Product [${product_name}] with id [${product_id}] status has been updated from [${readProduct.status}] into [${product_status}]`,
@@ -209,22 +214,6 @@ class ControllerProduct {
             next(err)
         }
     }
-
-    static productHistory(product_id, product_name, product_historyDescription, product_updatedBy) {
-        History.create({
-            entityId: product_id,
-            name: product_name,
-            description: product_historyDescription,
-            updatedBy: product_updatedBy,
-        })
-            .then(data => {
-                console.log(data)
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    }
-
 }
 
 module.exports = ControllerProduct
